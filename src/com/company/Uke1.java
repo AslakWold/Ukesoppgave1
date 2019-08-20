@@ -1,21 +1,25 @@
 package com.company;
 
+import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Scanner;
 
-public class Main {
+public class Uke1 {
 
     public static void main(String[] args) {
-	    System.out.println("Hallo algdat!");
+	    /*System.out.println("Hallo algdat!");
         int[] tabell = {14,3,2,1,17,0};
         System.out.println("Indeksen til det minste tallet er: " + Arrays.toString(minmax(tabell)));
         Scanner ip = new Scanner(System.in);
         System.out.println("Skriv in et heltall: ");
         int heltall = ip.nextInt();
-        int fakultetDuØnsker = 5;
+       // int fakultetDuØnsker = 5;
         System.out.println("Summen av fakulteten til tallet er: " + fak(heltall));
-
-
+*/
+	    int[] values = {1};
+	    int[] verdier = {};
+        System.out.println("Resultat med ett tall" + (maks(values)));
+        System.out.println("Resultat med ett tall" + (maks(verdier)));
     }
 
     //1.1.2 deloppgave 2
@@ -71,5 +75,26 @@ public class Main {
         }
         return sum;
     }
+
+    public static int maks(int[] a) {       //siste versjon av maksmetoden
+        int sist = a.length -1;             //siste posisjon i tabellen
+        int m = 0;                          //indeks til største verdi i tabellen
+        int maksverdi = a[0];               //største verdi
+        int temp = a[sist];                 //tar vare på siste verdi
+        a[sist] = 0x7fffffff;               //legger tallet 2147483647 sist
+
+        for(int i = 0; ; i++) {             //i starter med 0
+            if(a[i] >=maksverdi) {          //denne blir sann til slutt
+                if(i == sist) {             // sjekker om vi er ferdige
+                    a[sist] = temp;         // legger siste verdi tilbake
+                    return temp >=maksverdi ? sist : m; //er siste størst?
+                }
+                else {
+                    maksverdi = a[i];       //maksverdi oppdateres
+                    m = i;                  //m oppdateres
+                }
+            }
+        }
+    } //maks
 
 }
