@@ -124,5 +124,7 @@ public class MålingAvTidsforbruk {
             }
         }
     } //maks
+
+
 }
 

@@ -1,9 +1,10 @@
 package hjelpetabeller;
 
+import java.security.InvalidParameterException;
 import java.util.Arrays;
 import java.util.Random;
 
-public class Tabell {
+public class Tabell { //samleklasse for metodene fra program/målingAvTidsforbruk
 
     private Tabell() {}; //privat standardkonstruktør - hindrer instansiering
 
@@ -41,10 +42,8 @@ public class Tabell {
 
     //Metoden maks(int[] values, int begin, int end)
     public static int maximum(int[] values, int begin, int end) {
-        if(begin < 0 || end > values.length || begin >= end) {
-            throw new IllegalArgumentException("Illegalt argument");
-        }
-
+        arrayTest(values);
+        fraTilKontroll(values.length, begin, end);
         int indeks = begin;
         int maksverdi = values[begin];
 
@@ -84,4 +83,84 @@ public class Tabell {
     public static int minimum1(int[] values) {
         return minimum(values, 2,5);
     }
+
+    public static void bytt(char[] c, int i, int j) {
+        char temp = c[i]; c[i] = c[j]; c[j] = temp;
+    }
+
+    public static void skriv(int[] a, int fra, int til) {
+        String space = "";
+        for(int i = fra; i < til; i++) {
+            System.out.print(space + a[i]);
+            space = " ";
+        }
+    }
+
+    public static void skriv(int[] a) {
+        String space = "";
+        for(int i = 0; i < a.length; i++) {
+            System.out.print(space + a[i]);
+            space = " ";
+        }
+    }
+
+    public static void skrivln(int[] a, int fra, int til) {
+        String space = "";
+        for(int i = fra; i < til; i++) {
+            System.out.print(space + a[i]);
+            space = " ";
+        }
+        System.out.println();
+    }
+
+    public static void skrivln(int[] a) {
+        String space = "";
+        for(int i = 0; i < a.length; i++) {
+            System.out.print(space + a[i]);
+            space = " ";
+
+        }
+        System.out.println();
+
+    }
+
+    public static void fraTilKontroll(int tablengde, int fra, int til) {
+        if (fra < 0) {
+            throw new ArrayIndexOutOfBoundsException("Fra(" + til + ") er negativ!");
+        }
+
+        if(til > tablengde) {
+            throw new ArrayIndexOutOfBoundsException("Til(" + til + ") > tablengde(" +tablengde+ ")");
+        }
+
+        if(fra > til) {
+            throw new IllegalArgumentException("Fra(" + fra + ") > til(" + til + ") - illegalt intervall!");
+        }
+    }
+
+    public static void vhKontroll(int tablengde, int v, int h) {
+        if(v < 0) {
+            throw new ArrayIndexOutOfBoundsException("v(" + v + ") < 0");
+        }
+
+        if(h >= tablengde) {
+            throw new ArrayIndexOutOfBoundsException("h(" + h + ") >= tablengde(" + tablengde +")");
+        }
+
+        if( v > h + 1) {
+            throw new IllegalArgumentException("v = " + v + ", h = " + h);
+        }
+    }
+
+    public static void arrayTest(int[] a) {
+        if(a == null) {
+            throw new NullPointerException("Arrayet er ikke definert");
+        }
+
+        if(a.length == 0) {
+            throw new InvalidParameterException("Arrayet har ikke lengde > 0");
+        }
+    }
+
 }
+
