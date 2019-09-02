@@ -2,11 +2,13 @@ package com.company;
 
 import hjelpetabeller.Tabell;
 
+import java.util.Arrays;
+
 public class program {
 
     public static void main(String[] args) {
 
-        int[] a = Tabell.randPerm(20);
+/*      int[] a = Tabell.randPerm(20);
         for(int k : a) {
             System.out.print(k + " ");
         }
@@ -21,6 +23,16 @@ public class program {
 
         int[] b = null;
 
-        System.out.println(Tabell.maximum(b, 10 ,6));
+        System.out.println(Tabell.maximum(b, 10 ,6)); */
+
+        int[] a = Tabell.randPerm(20);
+        int[] b = Tabell.nestMaks(a);
+
+        int m = b[0], nm = b[1];
+        Tabell.skrivln(a);
+        System.out.print("Størst(" + a[m] + ") har posisjon " + m);
+        System.out.println(", nest størst(" + a[nm] + ") har posisjon " + nm); //dope, stemmer
+
+        System.out.println(Arrays.asList(Tabell.sortering(a)));
     }
 }
