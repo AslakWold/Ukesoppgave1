@@ -162,6 +162,52 @@ public class Tabell { //samleklasse for metodene fra program/målingAvTidsforbru
         }
     }
 
+    public static int[] nestMaks(int[] a) { // ny versjon av nestmaks
+        int n = a.length; // tabellens lengde
+        if(n < 2) {
+            throw new java.util.NoSuchElementException("a.length (" + n + ") < 2!");
+        }
+
+        int sist = a.length - 1;
+        int m = 0; //Indeks til største verdi
+        int nm = sist; // indeks til nest største verdi
+
+        if(a[sist] > a[0]) {
+            m = sist;
+            nm = 0;
+        }
+
+        int maksverdi = a[m]; // største verdi
+        int nestmaksverdi = a[nm]; // neststørste verdi
+
+
+        int temp = a[sist];
+        a[sist] = 0x7fffffff;
+
+        for(int i = 1; ; i++) {
+            if(a[i] > nestmaksverdi) {
+
+                if(i == sist) {
+                    a[sist] = temp; //legger siste verdi tilbake
+                    int[] b = {m, nm};
+                    return b;
+                }
+                if(a[i] > maksverdi) {
+                    nm = m;
+                    nestmaksverdi = maksverdi; // ny nest største verdi
+
+                    m = i;
+                    maksverdi = a[m]; // ny største verdi
+                }
+                else {
+                    nm = i;
+                    nestmaksverdi = a[nm]; // ny nest størst verdi
+                }
+            } // if
+        } // for
+    }
+
+    /*
     public static int[] nestMaks(int[] a) {
         int n = a.length;
 
@@ -184,7 +230,7 @@ public class Tabell { //samleklasse for metodene fra program/målingAvTidsforbru
         }
 
         return new int[] {m, nm};
-    }
+    } */
 
     //versjon av nestMaks der den største havner forrest:
 

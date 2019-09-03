@@ -2,9 +2,10 @@ package com.company;
 
 import hjelpetabeller.Tabell;
 
+import java.sql.SQLOutput;
 import java.util.Arrays;
 
-public class program {
+public class    program {
 
     public static void main(String[] args) {
 
@@ -33,6 +34,9 @@ public class program {
         System.out.print("Størst(" + a[m] + ") har posisjon " + m);
         System.out.println(", nest størst(" + a[nm] + ") har posisjon " + nm); //dope, stemmer
 
-        System.out.println(Arrays.asList(Tabell.sortering(a)));
+        System.out.println(Arrays.toString(Tabell.sortering(a)));
+
+
+        System.out.println(Arrays.toString(Tabell.nestMaks(a)));
     }
 }
