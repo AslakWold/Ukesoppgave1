@@ -162,7 +162,78 @@ public class Tabell { //samleklasse for metodene fra program/målingAvTidsforbru
         }
     }
 
-    public static int[] nestMaks(int[] a) { // ny versjon av nestmaks
+    public static int[] nestMaks(int[] a) // ny versjon
+    {
+        int n = a.length;     // tabellens lengde
+        if (n < 2) throw      // må ha minst to verdier
+                new java.util.NoSuchElementException("a.length(" + n + ") < 2!");
+
+        int m = 0;      // m er posisjonen til største verdi
+        int nm = 1;     // nm er posisjonen til nest største verdi
+
+        // bytter om m og nm hvis a[1] er større enn a[0]
+        if (a[1] > a[0]) { m = 1; nm = 0; }
+
+        int maksverdi = a[m];                // største verdi
+        int nestmaksverdi = a[nm];           // nest største verdi
+
+        for (int i = 2; i < n; i++)
+        {
+            if (a[i] > nestmaksverdi)
+            {
+                if (a[i] > maksverdi)
+                {
+                    nm = m;
+                    nestmaksverdi = maksverdi;     // ny nest størst
+
+                    m = i;
+                    maksverdi = a[m];              // ny størst
+                }
+                else
+                {
+                    nm = i;
+                    nestmaksverdi = a[nm];         // ny nest størst
+                }
+            }
+        } // for
+
+        return new int[] {m,nm};    // n i posisjon 0, nm i posisjon 1
+
+    } // nestMaks
+
+    public static int[] nestMaksTurnering(int[] a) {
+        int n = a.length;       //for å forenkle notasjonen
+
+        if(n < 2) {
+            throw new IllegalArgumentException("a.length(" + n + ") < 2!");
+        }
+
+        int[] b = new int[2*n];         //turneringstreet
+        System.arraycopy(a,0,b,n,n);
+
+        for(int k = 2*n-2; k > 1; k -= 2) {      //lager turneringstreet
+            b[k/2] = Math.max(b[k], b[k+1]);
+        }
+
+        System.out.println((Arrays.toString(b)));
+
+        int maksverdi = b[1], nestmaksverdi = Integer.MIN_VALUE;
+
+        for(int m = 2*n - 1, k = 2; k < m; k *= 2) {
+            int tempverdi = b[k+1];         //ok hvis maksverdi er b[k]
+            if(maksverdi != b[k]) {
+                tempverdi = b[k];
+                k++;
+            }
+            if(tempverdi > nestmaksverdi) {
+                nestmaksverdi = tempverdi;
+            }
+        }
+        return new int[] {maksverdi, nestmaksverdi};        //størst og neststørst
+    } //nestMaksTurnering
+
+
+    /*public static int[] nestMaks(int[] a) { // ny versjon av nestmaks
         int n = a.length; // tabellens lengde
         if(n < 2) {
             throw new java.util.NoSuchElementException("a.length (" + n + ") < 2!");
@@ -205,7 +276,7 @@ public class Tabell { //samleklasse for metodene fra program/målingAvTidsforbru
                 }
             } // if
         } // for
-    }
+    } //nestMaks */
 
     /*
     public static int[] nestMaks(int[] a) {
@@ -281,5 +352,298 @@ public class Tabell { //samleklasse for metodene fra program/målingAvTidsforbru
         }
         return a;
     }
+
+    public static void kopier(int[] a, int i, int[] b, int j, int ant) {
+        for(int n = i + ant; i < n; ) {
+            b[j++] = a[i++];
+        }
+    }
+
+    public static void snu(int[] a, int v, int h) { //snur intervallet a[v:h]
+        while (v < h) {
+            bytt(a, v++, h--);
+        }
+    }
+
+    public static void snu(int[] a, int v) { //snu fra og med v og ut tabellen
+        snu(a, v ,a.length - 1);
+    }
+
+    public static void snu(int[] a) { //snur hele tabellen
+        snu(a, 0, a.length - 1);
+    }
+
+    public static boolean nestePermutasjon(int[] a) {
+        int i = a.length - 2; // i starter nest bakerst
+        while(i >= 0 && a[i] > a[i + 1]) { // går mot venstre
+            i--;
+        }
+        if(i < 0) { //a = {n, n-1, ...., 2, 1}
+            return false;
+        }
+
+        int j = a.length - 1; // j starter bakerst
+        while(a[j] < a[i]) { //stopper nå¨r a[j] > a[i]
+            j--;
+        }
+        bytt(a, i, j); //bytter
+        snu(a, i + 1);//snur
+
+        return true; // en ny permutasjon
+    }
+
+    public static void boblesortering(int[] a) {
+        for(int n = a.length; n > 1;) {
+            int byttindeks = 0;
+            for (int i = 1; i < n; i++) {
+                if (a[i - 1] > a[i]) {
+                    bytt(a,i-1, i);
+                    byttindeks = i;
+                }
+            }
+            n = byttindeks;
+        }
+    }
+
+    public static void utvalgssortering(int[] a) {
+        for(int i = 0; i < a.length - 1; i++) {
+            bytt(a, i, minimum(a, i, a.length));
+        }
+    }
+
+    public static int lineærsøk(int[] a, int verdi) {
+        if(a.length == 0 ||  verdi > a[a.length - 1]) {
+            return -(a.length + 1);     //verdi er større enn den største
+        }
+
+        int i = 0; for( ; a[i] < verdi; i++); //siste verdi er vaktpost
+
+        return verdi == a[i] ? i : -(i + 1); //sjekker innholdet i a[i];
+
+    }
+
+    public static int bakvendtLineærsøk(int[] a, int verdi) {
+        if(a.length == 0 ||  verdi > a[a.length - 1]) {
+            return -(a.length + 1);     //verdi er større enn den største
+        }
+
+        int i = a.length - 1; for( ; a[i] > verdi; i--); //siste verdi er vaktpost
+
+        return verdi == a[i] ? i : -(i + 1); //sjekker innholdet i a[i];
+
+    }
+
+    public static int hopplengdeLineærsøk(int[] a, int hopplengde, int verdi) {
+        if(a.length == 0 || verdi > a[a.length - 1]) {
+            return -(a.length + 1);
+        }
+        if(hopplengde < 1) {
+            throw new IllegalArgumentException("Må ha k > 0!");
+        }
+        int j = hopplengde - 1;
+        for(; j < a.length && verdi > a[j]; j += hopplengde);
+
+        int i = j - hopplengde + 1; //søker i a[j-k+1:j]
+        for(; i < a.length && verdi > a[i]; i++);
+
+        if(i < a.length && a[i] == verdi) {
+            return i;
+        } else {
+            return -(i + 1);
+        }
+    }
+
+    public static int kvadratrotsøk(int[] a, int verdi) {
+        return hopplengdeLineærsøk(a,(int) Math.sqrt(a.length), verdi);
+    }
+
+    /*public static int binærsøk(int[] a, int fra, int til, int verdi) {
+        fraTilKontroll(a.length, fra, til);
+        int v = fra; int h = til-1; // v og h er intervallets endepunkter
+
+        while(v <= h) { //fortsetter så lenge som a[v:h] ikke er tom
+            int m = (v + h) / 2;
+            int midtverdi = a[m];
+
+            if (verdi == midtverdi) {
+                return m; //funnet
+            } else if(verdi > midtverdi) {
+                v = m + 1; // verdi i a[m+1:h]
+            } else {
+                h = m - 1; // verdi i a[v:m-1]
+            }
+        }
+        return -(v + 1); // ikke funnet, v er relativt insettingspunkt
+    } */
+
+    public static int binærsøk(int[] a, int verdi) { // søker i hele a
+        return binærsøk(a,0,a.length,verdi);
+    }
+
+    public static int binærsøk(int[] a, int fra, int til, int verdi) {
+        fraTilKontroll(a.length, fra, til);
+        int v = fra, h = til - 1; // v og h er intervallets endepunkter
+
+        while(v < h) { // obs. må ha v < h her og ikke v <= h
+
+            int m = (v + h) / 2; // heltallsdivisjon - finner midten
+
+            if (verdi > a[m]) {
+                v = m + 1; // verdi må ligge i a[m+1:h]
+            } else {
+                h = m;      //verdi må ligge i a[v:m]
+            }
+        }
+        if( h < v || verdi < a[v]) {
+            return -(v + 1);        //ikke funnet
+        } else if(verdi == a[v]) {
+            return v; //funnet
+        } else {
+            return -(v + 2); // ikke funnet
+        }
+
+    }
+
+    public static void innsettingssortering(int[] a, int fra, int til) {
+        for(int i = fra; i < til; i++) {
+            int temp = a[i]; //hjelpevariabel
+            int j = i - 1; for(;  j >= 0 && temp < a[j]; j--) {
+                a[j+1]= a[j];
+            }
+            a[j+1]= temp;
+        }
+    }
+
+    public static int maks(double[] a) {
+        int m = 0;  //indeks til startverdi
+        double maksverdi = a[0]; // foreløpig største verdi
+
+        for(int i = 1; i < a.length; i++) {
+            if(a[i] > maksverdi) { // hvis tallet på i'te posisjon er større enn nåværende maksverdi
+                m = i; //ny indeks for maks
+                maksverdi = a[i]; // ny maksverdi
+            }
+        }
+        return m; //returner posisjonen til største verdi
+    }
+
+    /*public static int maks(String[] a) {
+        int m = 0; // indeks til største verdi
+        String maksverdi = a[0]; //største verdi
+
+        for(int i = 1; i < a.length; i++) {
+            if(a[i].compareToIgnoreCase(maksverdi) > 0) { //Hvis strengen i posisjon a[i] er "større" dvs. lenger bak i alfabetet
+                maksverdi = a[i]; // ny største verdi
+                m = i; //ny indeks til største verdi
+             }
+        }
+        return m; // returnerer posisjonen til største verdi
+    }*/
+
+    public static int maks(char[] a) {
+        int m = 0;
+        char maksverdi = a[0];
+
+        for(int i = 0; i < a.length; i++) {
+            if(a[i] > maksverdi) { //Her tar den verdier fra ASCII (tallverdier for bokstaver)
+                maksverdi = a[i];
+                m = i;
+            }
+        }
+        return m;
+    }
+
+    public static int maks(Integer[] a) {
+        int m = 0;
+        Integer maksverdi = a[0];
+
+        for(int i = 1; i < a.length; i++) {
+            if(a[i].compareTo(maksverdi) > 0) {
+                maksverdi = a[i];
+                m = i;
+            }
+        }
+        return m;
+    }
+
+    public static <T extends Comparable<? super T>> int maks(T[] a) {
+        int m = 0;
+        T maksverdi = a[0];
+
+        for(int i = 0; i < a.length; i++) {
+            if(a[i].compareTo(maksverdi) > 0) {
+                maksverdi = a[i];
+                m = i;
+            }
+        }
+        return m;
+    }
+
+    public static <T extends Comparable<? super T>> void innsettingssortering(T[] a) {
+        for(int i = 1; i < a.length; i++) {
+            T verdi = a[i];         //verdi er et tabellelement
+            int j = i - 1;          //j er en indeks
+
+            // sammenligner og forskyver:
+            for(; j >= 0 && verdi.compareTo(a[j]) < 0; j--) {
+                a[j+1] = a[j];
+            }
+            a[j + 1] = verdi;
+        }
+    }
+
+    public static void skriv(Object[] a, int fra, int til) {
+        String space = "";
+        for(int i = fra; i < til; i++) {
+            System.out.print(space + a[i]);
+            space = " ";
+        }
+    }
+
+    public static void skriv(Object[] a) {
+        String space = "";
+        for(int i = 0; i < a.length; i++) {
+            System.out.print(space + a[i]);
+            space = " ";
+        }
+    }
+
+    public static void skrivln(Object[] a, int fra, int til) {
+        String space = "";
+
+        for(int i = fra; i < til; i++) {
+            System.out.print(space + a[i]);
+            space = " ";
+        }
+        System.out.println();
+    }
+
+    public static void skrivln(Object[] a) {
+        String space = "";
+        for(int i = 0; i < a.length; i++) {
+            System.out.print(space + a[i]);
+            space = " ";
+        }
+        System.out.println();
+    }
+    public static void bytt(Object[] a, int i, int j) {
+        Object temp = a[i];
+        a[i] = a[j];
+        a[j] = temp;
+    }
+
+    public static Integer[] randPermInteger(int n) {
+        Integer[]a = new Integer[n];        //en Integer-tabell
+        Arrays.setAll(a, i -> i + 1);       //tallene fra 1 til n
+
+        Random r  = new Random();       //hentes fra java.util
+
+        for(int k = n - 1; k > 0; k--) {
+            int i = r.nextInt(k+1);     //tilfeldig tall far [0,k]
+            bytt(a,k,i);
+        }
+        return a;       //tabellen med permutasjonen returneres
+    }
+
 }
 

@@ -26,8 +26,9 @@ public class    program {
 
         System.out.println(Tabell.maximum(b, 10 ,6)); */
 
-        int[] a = Tabell.randPerm(20);
-        int[] b = Tabell.nestMaks(a);
+        int[] a = Tabell.randPerm(8);
+        int[] b = new int[2 * a.length];
+        /*int[] b = Tabell.nestMaks(a);
 
         int m = b[0], nm = b[1];
         Tabell.skrivln(a);
@@ -35,8 +36,16 @@ public class    program {
         System.out.println(", nest størst(" + a[nm] + ") har posisjon " + nm); //dope, stemmer
 
         System.out.println(Arrays.toString(Tabell.sortering(a)));
+        */
+        System.out.println(Arrays.toString(a));
+        //System.out.println(Arrays.toString(Tabell.nestMaks(a)));
+        System.out.println(Arrays.toString(Tabell.nestMaksTurnering(a)));
 
+        System.out.println();
 
-        System.out.println(Arrays.toString(Tabell.nestMaks(a)));
+        Tabell.kopier(a, 0, b, a.length/2, a.length);
+        System.out.println(Arrays.toString(a));
+        System.out.println(Arrays.toString(b));
     }
+
 }
