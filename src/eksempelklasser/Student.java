@@ -13,7 +13,7 @@ public class Student extends Person {
         return super.toString() + " " + studium.name();
     }
 
-    public Studium getStudium() {
+    public Studium studium() {
         return studium;
     }
 }

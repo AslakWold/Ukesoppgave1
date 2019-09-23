@@ -1,7 +1,10 @@
 package hjelpetabeller;
 
+import eksempelklasser.Komparator;
+
 import java.security.InvalidParameterException;
 import java.util.Arrays;
+import java.util.NoSuchElementException;
 import java.util.Random;
 
 public class Tabell { //samleklasse for metodene fra program/målingAvTidsforbruk
@@ -643,6 +646,43 @@ public class Tabell { //samleklasse for metodene fra program/målingAvTidsforbru
             bytt(a,k,i);
         }
         return a;       //tabellen med permutasjonen returneres
+    }
+
+    public static <T> void innsettingssortering(T[] a, Komparator<? super T> c) {
+        for(int i = 1; i < a.length; i++) { //starter med i = 1
+            T verdi = a[i];     //verdi er et tabellelement
+            int j = i - 1;      //j er en indeks
+
+            //sammenligner og forskyver:
+            for( ; j >= 0 && c.compare(verdi, a[j]) < 0; j--) {
+                a[j+1] = a[j];
+            }
+            a[j+1] = verdi;     //j + 1 er rett sortert plass
+        }
+    }
+
+    public static <T> int maks(T[] a, Komparator<? super T> c) {
+        return maks(a, 0, a.length, c); //kaller metoden under
+    }
+
+    public static <T> int maks(T[] a, int fra, int til, Komparator<? super T> c) {
+        fraTilKontroll(a.length, fra, til);
+
+        if(fra == til) {
+            throw new NoSuchElementException
+                    ("fra(" + fra + ") = til(" + til + ") - tomt tabellintervall");
+        }
+
+        T maksverdi = a[fra];   //Største verdi
+        int m = fra;            //indeks til største verdi
+
+        for(int i = fra + 1; i < til; i++) {
+            if(c.compare(a[i],maksverdi) > 0)  {
+                maksverdi = a[i];   //største verdi oppdateres
+                m = i;              //indeks til største verdi oppdateres
+            }
+        }
+        return m;
     }
 
 }

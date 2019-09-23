@@ -115,7 +115,7 @@ public class Uke4 {
         resultat.ifPresent(System.out::println);
         Arrays.stream(p).max(Comparator.naturalOrder()).ifPresent(System.out::println)*/
 
-        for (Studium s : Studium.values())
+       /* for (Studium s : Studium.values())
         {
             System.out.println(s.toString() + " (" + s.name() + ")");
         }
@@ -135,9 +135,104 @@ public class Uke4 {
         s[6] = new Student("Jonas", "Lium", Studium.Elektro);    // Jonas Lium
 
         Tabell.innsettingssortering(s);                     // Programkode 1.4.2 e)
-        for (Student t : s) System.out.println(t);
+        for (Student t : s) System.out.println(t);*/
+
+        /*Person[] p = new Person[5];                   // en persontabell
+
+        p[0] = new Person("Kari","Svendsen");         // Kari Svendsen
+        p[1] = new Person("Boris","Zukanovic");       // Boris Zukanovic
+        p[2] = new Person("Ali","Kahn");              // Ali Kahn
+        p[3] = new Person("Azra","Zukanovic");        // Azra Zukanovic
+        p[4] = new Person("Kari","Pettersen");        // Kari Pettersen
+
+        *//*class FornavnKomparator implements Komparator<Person> {
+            public int compare(Person p1, Person p2) {      //to personer
+                return p1.fornavn().compareTo(p2.fornavn());  //Sammenligner fornavn
+            }
+        }
+
+        //Komparator<Person> c = new FornavnKomparator();     //en Instans av klassen
+        *//* //Gammeldags teknikk ^
+
+        *//*Komparator<Person> c = (p1,p2) -> p1.fornavn().compareTo(p2.fornavn());
+        Tabell.innsettingssortering(p, c);
+        *//* //Moderne teknikk ^, men kan også sette lampa inn som argument i metoden =>
+
+        Tabell.innsettingssortering(p, (p1, p2) -> p1.fornavn().compareTo(p2.fornavn()));
 
 
+        System.out.println(Arrays.toString(p)); */
+
+       /* Student[] s = new Student[6];                             // en studenttabell
+        s[0] = new Student("Kari","Svendsen", Studium.Data);      // Kari Svendsen
+        s[1] = new Student("Boris","Zukanovic", Studium.IT);      // Boris Zukanovic
+        s[2] = new Student("Ali","Kahn", Studium.Anvendt);        // Ali Kahn
+        s[3] = new Student("Azra","Zukanovic", Studium.IT);       // Azra Zukanovic
+        s[4] = new Student("Kari","Pettersen", Studium.Data);     // Kari Pettersen
+        s[5] = new Student("Kari", "Hansen", Studium.Data);       // Kari Hansen
+        *//*Tabell.innsettingssortering(s, (s1,s2) -> s1.studium().compareTo(s2.studium()));
+        System.out.println(Arrays.toString(s));*//*
+
+        //Fra kompendiet
+        Komparator<Student> c = (s1,s2) -> {
+            int cmp = s1.studium().name().compareTo(s2.studium().name());
+            return cmp != 0 ? cmp : s1.compareTo(s2);
+        };
+
+        Tabell.innsettingssortering(s, c);
+        System.out.println(Arrays.toString(s));
+
+        //Oppgave 3: Lambda uttrykk som sorter etter studium - fornavn - etternavn
+        Tabell.innsettingssortering(s, (s1,s2) -> {
+            int k = s1.studium().compareTo(s2.studium());
+            if(k != 0) {
+                return k;
+            }
+            k = s1.fornavn().compareTo(s2.fornavn());
+            if(k != 0) {
+                return k;
+            }
+            return s1.etternavn().compareTo(s2.etternavn());
+        });
+
+        String[] streng = {"21","18","8","13","20","6","16","25","3","10"};
+        Tabell.innsettingssortering(streng, (s1,s2) -> {
+            int k = s1.length() - s2.length();
+            return k != 0 ? k : s1.compareTo(s2);
+        });
+
+        System.out.println(Arrays.toString(streng));*/
+
+        Double[] d = {5.7,3.14,7.12,3.9,6.5,7.1,7.11};
+
+        Tabell.innsettingssortering(d, Komparator.naturligOrden());
+        System.out.println(Arrays.toString(d));
+        Tabell.innsettingssortering(d, Komparator.omvendtOrden());
+        System.out.println(Arrays.toString(d));
+
+        Boolean[] b = {false, true, true, false, false, true, false, true};
+
+        Tabell.innsettingssortering(b, Komparator.naturligOrden());
+        System.out.println(Arrays.toString(b));
+
+        Person[] p = new Person[5];                       // en persontabell
+        p[0] = new Person("Kari", "Svendsen");            // Kari Svendsen
+        p[1] = new Person("Boris", "Zukanovic");          // Boris Zukanovic
+        p[2] = new Person("Ali", "Kahn");                 // Ali Kahn
+        p[3] = new Person("Azra", "Zukanovic");           // Azra Zukanovic
+        p[4] = new Person("Kari", "Pettersen");           // Kari Pettersen
+
+        Tabell.innsettingssortering(p, Komparator.orden(Person::etternavn));
+        System.out.println(Arrays.toString(p));
+
+        String[] streng = {"Lars","Anders","Bodil","Kari","Per","Berit"};
+        //for denne (Oppg. 1.4.7 5) ) lagde jeg omvendtOrden i Komparator; kan også bruke lambda-uttrykk:
+
+        //Tabell.innsettingssortering(streng, (x,y) -> y.length() - x.length());
+        //Tabell.innsettingssortering(streng, Komparator.orden( x -> -x.length()));
+
+        Tabell.innsettingssortering(streng, Komparator.omvendtOrden(String::length));
+        System.out.println(Arrays.toString(streng));
 
     }
 
