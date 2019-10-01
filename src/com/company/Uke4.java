@@ -4,9 +4,6 @@ import eksempelklasser.*;
 import hjelpetabeller.Tabell;
 
 import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Optional;
-import java.util.stream.Stream;
 
 /**Kapitell 1.4;
  a.
@@ -205,14 +202,14 @@ public class Uke4 {
 
         Double[] d = {5.7,3.14,7.12,3.9,6.5,7.1,7.11};
 
-        Tabell.innsettingssortering(d, Komparator.naturligOrden());
+        Tabell.innsettingssortering(d, Comparator.naturligOrden());
         System.out.println(Arrays.toString(d));
-        Tabell.innsettingssortering(d, Komparator.omvendtOrden());
+        Tabell.innsettingssortering(d, Comparator.omvendtOrden());
         System.out.println(Arrays.toString(d));
 
         Boolean[] b = {false, true, true, false, false, true, false, true};
 
-        Tabell.innsettingssortering(b, Komparator.naturligOrden());
+        Tabell.innsettingssortering(b, Comparator.naturligOrden());
         System.out.println(Arrays.toString(b));
 
         Person[] p = new Person[5];                       // en persontabell
@@ -222,7 +219,7 @@ public class Uke4 {
         p[3] = new Person("Azra", "Zukanovic");           // Azra Zukanovic
         p[4] = new Person("Kari", "Pettersen");           // Kari Pettersen
 
-        Tabell.innsettingssortering(p, Komparator.orden(Person::etternavn));
+        Tabell.innsettingssortering(p, Comparator.orden(Person::etternavn));
         System.out.println(Arrays.toString(p));
 
         String[] streng = {"Lars","Anders","Bodil","Kari","Per","Berit"};
@@ -231,9 +228,19 @@ public class Uke4 {
         //Tabell.innsettingssortering(streng, (x,y) -> y.length() - x.length());
         //Tabell.innsettingssortering(streng, Komparator.orden( x -> -x.length()));
 
-        Tabell.innsettingssortering(streng, Komparator.omvendtOrden(String::length));
+        Tabell.innsettingssortering(streng, Comparator.orden(x -> x));
         System.out.println(Arrays.toString(streng));
 
+        Tabell.innsettingssortering(streng, Comparator.naturligOrden());
+        System.out.println(Arrays.toString(streng));
+
+        String[] s = {"21","18","8","13","20","6","16","25","3","10"};
+        //ville at vi skulle bruke deretter(x -> x) men dette fungerer ikke pga av det var expected int
+        Tabell.innsettingssortering(s, Comparator.orden(String::length).deretter(Comparator.naturligOrden()));
+        System.out.println(Arrays.toString(s));
+
+        int i = 0;
+        for( ; i < s.length; i++);
     }
 
 }

@@ -1,6 +1,6 @@
 package hjelpetabeller;
 
-import eksempelklasser.Komparator;
+import eksempelklasser.Comparator;
 
 import java.security.InvalidParameterException;
 import java.util.Arrays;
@@ -648,7 +648,7 @@ public class Tabell { //samleklasse for metodene fra program/målingAvTidsforbru
         return a;       //tabellen med permutasjonen returneres
     }
 
-    public static <T> void innsettingssortering(T[] a, Komparator<? super T> c) {
+    public static <T> void innsettingssortering(T[] a, Comparator<? super T> c) {
         for(int i = 1; i < a.length; i++) { //starter med i = 1
             T verdi = a[i];     //verdi er et tabellelement
             int j = i - 1;      //j er en indeks
@@ -661,11 +661,11 @@ public class Tabell { //samleklasse for metodene fra program/målingAvTidsforbru
         }
     }
 
-    public static <T> int maks(T[] a, Komparator<? super T> c) {
+    public static <T> int maks(T[] a, Comparator<? super T> c) {
         return maks(a, 0, a.length, c); //kaller metoden under
     }
 
-    public static <T> int maks(T[] a, int fra, int til, Komparator<? super T> c) {
+    public static <T> int maks(T[] a, int fra, int til, Comparator<? super T> c) {
         fraTilKontroll(a.length, fra, til);
 
         if(fra == til) {
