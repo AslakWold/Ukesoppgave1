@@ -1,33 +1,33 @@
 package eksempelklasser;
 
 @FunctionalInterface
-public interface Comparator<T> { //et funksjonsgrensesnitt
+public interface Komparator<T> { //et funksjonsgrensesnitt
     int compare(T x, T y); //en abstrakt metode
 
-    public static <T extends Comparable<? super T>> Comparator<T> naturligOrden() {
+    public static <T extends Comparable<? super T>> Komparator<T> naturligOrden() {
         return (x,y) -> x.compareTo(y);
     }
 
-    public static <T extends Comparable<? super T>> Comparator<T> omvendtOrden() {
+    public static <T extends Comparable<? super T>> Komparator<T> omvendtOrden() {
         return (x,y) -> y.compareTo(x);
     }
 
     public static <T, R extends Comparable<? super R>>
-    Comparator<T> orden(Funksjon<? super T, ? extends R> velger) {
+    Komparator<T> orden(Funksjon<? super T, ? extends R> velger) {
         return (x,y) -> velger.anvend(x).compareTo(velger.anvend(y));
     }
 
     public static <T, R extends Comparable<? super R>>
-    Comparator<T> omvendtOrden(Funksjon<? super T, ? extends R> velger) {
+    Komparator<T> omvendtOrden(Funksjon<? super T, ? extends R> velger) {
         return (x,y) -> velger.anvend(y).compareTo(velger.anvend(x));
     }
 
-    public static <T, R> Comparator<T> orden
-            (Funksjon<? super T, ? extends R> velger, Comparator<? super R> c) {
+    public static <T, R> Komparator<T> orden
+            (Funksjon<? super T, ? extends R> velger, Komparator<? super R> c) {
         return (x,y) -> c.compare(velger.anvend(x), velger.anvend(y));
     }
 
-    default Comparator<T> deretter(Comparator<? super T> c) {
+    default Komparator<T> deretter(Komparator<? super T> c) {
         return (x,y) ->
         {
             int k = compare(x,y);
@@ -35,8 +35,8 @@ public interface Comparator<T> { //et funksjonsgrensesnitt
         };
     }
 
-    default <R> Comparator<T>
-    deretter(Funksjon<? super T, ? extends R> velger, Comparator<? super R> c) {
+    default <R> Komparator<T>
+    deretter(Funksjon<? super T, ? extends R> velger, Komparator<? super R> c) {
         return (x,y) ->
         {
             int k = compare(x,y);
@@ -44,7 +44,7 @@ public interface Comparator<T> { //et funksjonsgrensesnitt
         };
     }
 
-    default Comparator<T> omvendt() {
+    default Komparator<T> omvendt() {
         return (x,y) -> compare(y,x); //bytter x og y
     }
 
