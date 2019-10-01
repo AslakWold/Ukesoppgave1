@@ -1,9 +1,8 @@
 package hjelpetabeller;
 
-import eksempelklasser.Comparator;
-
 import java.security.InvalidParameterException;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.NoSuchElementException;
 import java.util.Random;
 
@@ -629,11 +628,12 @@ public class Tabell { //samleklasse for metodene fra program/målingAvTidsforbru
         }
         System.out.println();
     }
-    public static void bytt(Object[] a, int i, int j) {
+    //har laget en generisk metode for denne som sikkert fungerer bedre
+    /*public static void bytt(Object[] a, int i, int j) {
         Object temp = a[i];
         a[i] = a[j];
         a[j] = temp;
-    }
+    }*/
 
     public static Integer[] randPermInteger(int n) {
         Integer[]a = new Integer[n];        //en Integer-tabell
@@ -685,5 +685,153 @@ public class Tabell { //samleklasse for metodene fra program/målingAvTidsforbru
         return m;
     }
 
+
+    //
+    //
+    //              KAPITTEL 1.4.9 MANGE GENERISKE METODER UNDER HER
+    //
+    //
+
+
+    //1.4.9 2a)
+
+    public static <T> int minimum(T[] a, int fra, int til, Comparator<? super T> c) {
+
+        fraTilKontroll(a.length, fra, til);
+
+        T minimumsverdi = a[0];     //minste verdi
+        int indeks = fra;           //indeks til foreløpig minste verdi
+
+        for(int i = fra + 1; i < til; i++) {
+            if(c.compare(a[i], minimumsverdi) < 0) {
+                minimumsverdi = a[i];       //minste verdi oppdateres
+                indeks = i;                 //indeks til minste oppdateres
+            }
+        }
+        return indeks;
+    }
+
+    public static <T> int minimum(T[] a, Comparator<? super T> c) {
+        return minimum(a,0, a.length, c);
+    }
+
+    public static <T> void bytt(T[] a, int i, int j) {
+        T temp = a[i]; a[i] = a[j]; a[j] = temp;
+    }
+
+    public static <T> void utvalgssortering(T[] a, Comparator<? super T> c) {
+        for(int i = 0; i < a.length - 1; i++) {
+            bytt(a, i, minimum(a, i, a.length, c));
+        }
+    }
+
+    //1.4.9 2b)
+
+    public static <T> int binærsøk(T[] a, int fra, int til, T verdi, Comparator<? super T> c) {
+        fraTilKontroll(a.length, fra, til);
+
+        int v = fra, h = til - 1;       //v og h er intervallets endepunkter
+
+        while(v <= h) {
+            int m = (v + h) / 2;        //indeks til midtverdi/midtpunkt i tabell
+            T midtverdi = a[m];         //verdien til midtverdi/midtpunkt
+
+            int cmp = c.compare(verdi, midtverdi);
+
+            if(cmp > 0) {       //hvis verdi > midtverdi skal compare() returnere positvt tall
+                v = m + 1;
+            } else if(cmp < 0) { //hvis verdi < midtverdi skal compare() returnere negativt
+                h = m - 1;
+            } else {                                    //ellers == første verdi er den vi leter etter
+                return m;
+            }
+        }
+
+        return -(v + 1); //ikke funnet, men returnerer relativt innsettingspunkt
+    }
+
+    public static <T> int binærsøk(T[] a, T verdi, Comparator<? super T> c) {
+        return binærsøk(a, 0, a.length, verdi, c);  //bruker metoden over
+    }
+
+    //1.4.9 2c)
+
+    private static <T> int parter0(T[] a, int v, int h, T skilleverdi, Comparator<? super T> c) {
+        while(true) {   //Stopper når v > h
+            while(v <= h && c.compare(a[v], skilleverdi) < 0) { //h er stoppverdi for v
+                v++;
+            }
+            while(v <= h && c.compare(a[h], skilleverdi) >= 0) { //v er stoppverdi for h
+                h--;
+            }
+
+            if(v < h) {
+                bytt(a, v++, h--);      //bytter om a[v] og a[h]
+            } else {
+                return v;       //a[v] er nå den første som ikke er mindre enn skilleverdien
+            }
+        }
+    }
+
+    private static <T> int sParter0(T[] a, int v, int h, int indeks, Comparator<? super T> c) {
+        if(v < 0 || h >= a.length || indeks < v || indeks > h) {
+            throw new IllegalArgumentException("Ulovlig parameterverdi");
+        }
+
+        bytt(a, indeks, h);                         //skilleverdi a[indeks] flyttes bakerst
+        int pos = parter0(a, v, h-1, a[h], c);  //partisjonerer a[v:h -1]
+        bytt(a, pos, h);                           //bytter for å få skilleverdi på rett plass
+        return pos;
+
+    }
+
+    private static <T> void kvikksortering(T[] a, int v, int h, Comparator<? super T> c) {
+        if(v >= h) return;          // a[v:h] er tomt eller har maks ett element
+        int k = sParter0(a, v, h, (v + h)/2, c);
+        kvikksortering(a, v, k - 1, c);        //sorterer intervallet a[v:k-1]
+        kvikksortering(a, k + 1, h, c);        //sorterer intervallet a[k+1:h]
+    }
+
+    public static <T> void kvikksortering(T[] a, Comparator<? super T> c) {
+        kvikksortering(a, 0, a.length - 1, c);     //sorterer hele tabellen
+    }
+
+    //1.4.9 2d)
+
+    private static <T> void flett(T[] a, T[] b, int fra, int m, int til, Comparator<? super T> c) {
+        int n = m - fra;        //antall elementer i a[fra:m>
+        System.arraycopy(a, fra, b, 0, n);
+
+        int i = 0, j = m, k = fra;  //løkkevariabler og indekser
+
+        while (i < n && j < til) {   //fletter b[0:n> og a[m:til> og legger resultatet i a[fra:til>
+            a[k++] = c.compare(b[i], a[j]) <= 0 ? b[i++] : a[j++];
+        }
+
+        while (i < n) {
+            a[k++] = b[i++];    //tar med resten av b[0:n>
+        }
+    }
+
+
+
+    private static <T> void flettesortering(T[] a, T[] b, int fra, int til, Comparator<? super T> c) {
+        if(til - fra <= 1) {
+            return;             //a[fra:til> har maks ett element
+        }
+        int m = (fra + til)/2;  //midt mellom fra og til
+
+        flettesortering(a, b, fra, m, c);
+        flettesortering(a, b, m, til, c);
+
+        if(c.compare(a[m-1], a[m]) > 0) {
+            flett(a, b, fra, m, til, c);
+        }
+    }
+
+    public static <T> void flettesortering(T[] a, Comparator<? super T> c) {
+        T[] b = Arrays.copyOf(a, a.length/2);
+        flettesortering(a, b, 0, a.length, c);
+    }
 }
 

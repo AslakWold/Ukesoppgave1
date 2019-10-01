@@ -3,7 +3,9 @@ package com.company;
 import eksempelklasser.*;
 import hjelpetabeller.Tabell;
 
+import java.awt.*;
 import java.util.Arrays;
+import java.util.Comparator;
 
 /**Kapitell 1.4;
  a.
@@ -200,16 +202,16 @@ public class Uke4 {
 
         System.out.println(Arrays.toString(streng));*/
 
-        Double[] d = {5.7,3.14,7.12,3.9,6.5,7.1,7.11};
+        /*Double[] d = {5.7,3.14,7.12,3.9,6.5,7.1,7.11};
 
-        Tabell.innsettingssortering(d, Comparator.naturligOrden());
+        Tabell.innsettingssortering(d, Comparator.naturalOrder());
         System.out.println(Arrays.toString(d));
-        Tabell.innsettingssortering(d, Comparator.omvendtOrden());
+        Tabell.innsettingssortering(d, Comparator.reverseOrder());
         System.out.println(Arrays.toString(d));
 
         Boolean[] b = {false, true, true, false, false, true, false, true};
 
-        Tabell.innsettingssortering(b, Comparator.naturligOrden());
+        Tabell.innsettingssortering(b, Comparator.naturalOrder());
         System.out.println(Arrays.toString(b));
 
         Person[] p = new Person[5];                       // en persontabell
@@ -219,7 +221,7 @@ public class Uke4 {
         p[3] = new Person("Azra", "Zukanovic");           // Azra Zukanovic
         p[4] = new Person("Kari", "Pettersen");           // Kari Pettersen
 
-        Tabell.innsettingssortering(p, Comparator.orden(Person::etternavn));
+        Tabell.innsettingssortering(p, Comparator.comparing(Person::etternavn));
         System.out.println(Arrays.toString(p));
 
         String[] streng = {"Lars","Anders","Bodil","Kari","Per","Berit"};
@@ -228,19 +230,69 @@ public class Uke4 {
         //Tabell.innsettingssortering(streng, (x,y) -> y.length() - x.length());
         //Tabell.innsettingssortering(streng, Komparator.orden( x -> -x.length()));
 
-        Tabell.innsettingssortering(streng, Comparator.orden(x -> x));
+        Tabell.innsettingssortering(streng, Comparator.comparing(x -> x));
         System.out.println(Arrays.toString(streng));
 
-        Tabell.innsettingssortering(streng, Comparator.naturligOrden());
+        Tabell.innsettingssortering(streng, Comparator.naturalOrder());
         System.out.println(Arrays.toString(streng));
 
         String[] s = {"21","18","8","13","20","6","16","25","3","10"};
         //ville at vi skulle bruke deretter(x -> x) men dette fungerer ikke pga av det var expected int
-        Tabell.innsettingssortering(s, Comparator.orden(String::length).deretter(Comparator.naturligOrden()));
+        Tabell.innsettingssortering(s, Comparator.comparing(String::length).thenComparing(Comparator.naturalOrder()));
         System.out.println(Arrays.toString(s));
+*/
 
-        int i = 0;
-        for( ; i < s.length; i++);
+        int[] x = {3,5,6,2,6,1,4,7,7,4};         // x-koordinater
+        int[] y = {3,6,3,5,5,2,1,4,2,4};         // y-koordinater
+
+        Point[] punkt = new Point[x.length];     // en punkttabell
+        for (int i = 0; i < punkt.length; i++) punkt[i] = new Point(x[i],y[i]);
+
+        for (Point p : punkt) System.out.print("(" + p.x + "," + p.y + ") ");
+        System.out.println();                    // linjeskift
+
+        Comparator<Point> c = (p1, p2) ->
+        {
+            int d = p1.x - p2.x;    // forskjellen mellom x-koordinatene
+            if (d != 0) return d;
+            return p1.y - p2.y;     // forskjellen mellom y-koordinatene
+        };
+
+        Tabell.innsettingssortering(punkt, Comparator.comparing(Point::getX).thenComparing(Point::getY));
+
+        Tabell.innsettingssortering(punkt, c);
+
+        /*Tabell.innsettingssortering(punkt,  Comparator.comparing(p -> p.x).thenComparing(p -> p.y));
+        Tabell.innsettingssortering(punkt, Comparator.comparingInt(p -> p.x).thenComparingInt(p -> p.y));*/
+        //Uten å caste p som point vet ikke compiler helt hva p er
+
+        Tabell.innsettingssortering(punkt,  Comparator.comparing((Point p) -> p.x).thenComparing(p -> p.y));
+        Tabell.innsettingssortering(punkt, Comparator.comparingInt((Point p) -> p.x).thenComparingInt(p -> p.y));
+
+        Tabell.innsettingssortering(punkt, Comparator.comparingDouble(Point::getX).thenComparingDouble(Point::getY));
+
+        Tabell.innsettingssortering(punkt, (p1,p2) -> {
+            int d = (p1.x * p1.x + p1.y * p1.y) - (p2.x * p2.x + p2.y * p2.y);
+            if (d != 0) {
+                return d;
+            } else {
+                return p1.y - p2.y;
+            }
+        });
+
+        Tabell.innsettingssortering(punkt, (p1, p2) -> {
+            int d = p2.x*p1.y - p1.x*p2.y;
+            if(d != 0) return d;
+            if(p1.x != 0) return p1.x - p2.x;
+            if(p1.y != 0) return p1.y - p2.y;
+
+            //nå må p1 == (0,0)
+            if(p2.x == 0 && p2.y == 0) return 0; // p1 == p2 == (0,0)
+            return -1; //p1 == (0,0) og p2 != (0,0) gir p1 mindre enn p2
+        });
+
+
+        for (Point p : punkt) System.out.print("(" + p.x + "," + p.y + ") ");
     }
 
 }
