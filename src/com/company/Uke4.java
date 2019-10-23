@@ -242,7 +242,7 @@ public class Uke4 {
         System.out.println(Arrays.toString(s));
 */
 
-        int[] x = {3,5,6,2,6,1,4,7,7,4};         // x-koordinater
+        /*int[] x = {3,5,6,2,6,1,4,7,7,4};         // x-koordinater
         int[] y = {3,6,3,5,5,2,1,4,2,4};         // y-koordinater
 
         Point[] punkt = new Point[x.length];     // en punkttabell
@@ -262,8 +262,8 @@ public class Uke4 {
 
         Tabell.innsettingssortering(punkt, c);
 
-        /*Tabell.innsettingssortering(punkt,  Comparator.comparing(p -> p.x).thenComparing(p -> p.y));
-        Tabell.innsettingssortering(punkt, Comparator.comparingInt(p -> p.x).thenComparingInt(p -> p.y));*/
+        *//*Tabell.innsettingssortering(punkt,  Comparator.comparing(p -> p.x).thenComparing(p -> p.y));
+        Tabell.innsettingssortering(punkt, Comparator.comparingInt(p -> p.x).thenComparingInt(p -> p.y));*//*
         //Uten å caste p som point vet ikke compiler helt hva p er
 
         Tabell.innsettingssortering(punkt,  Comparator.comparing((Point p) -> p.x).thenComparing(p -> p.y));
@@ -292,7 +292,20 @@ public class Uke4 {
         });
 
 
-        for (Point p : punkt) System.out.print("(" + p.x + "," + p.y + ") ");
+        for (Point p : punkt) System.out.print("(" + p.x + "," + p.y + ") ");*/
+
+        Dato[] d = new Dato[5];           // en datotabell
+        d[0] = new Dato(24,12,2014);      // 24/12-2014
+        d[1] = new Dato(24,12,2012);      // 24/12-2012
+        d[2] = new Dato(9,12,2013);       // 9/12-2013
+        d[3] = new Dato(25,12,2012);      // 25/12-2012
+        d[4] = new Dato(10,12,2013);      // 10/12-2013
+
+        Tabell.innsettingssortering(d, Comparator.naturalOrder());
+        for(Dato x : d) {
+            System.out.println(x);
+        }
+
     }
 
 }
