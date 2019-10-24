@@ -306,6 +306,32 @@ public class Uke4 {
             System.out.println(x);
         }
 
+
+        Klokkeslett[] k = new Klokkeslett[5];
+        k[0] = new Klokkeslett("23:56");
+        k[1] = new Klokkeslett("09:09");
+        k[2] = new Klokkeslett("07:00");
+        k[3] = new Klokkeslett("00:00");
+        k[4] = new Klokkeslett("19:01");
+
+        Tabell.innsettingssortering(k);
+        for(Klokkeslett x : k) {
+            System.out.print(x + " ");
+        }
+
+        System.out.println();
+
+        Tid[] tider = new Tid[4];
+
+        tider[0] = new Tid(24,12,2014,"15:30");
+        tider[1] = new Tid(24,12,2014,"12:00");
+        tider[2] = new Tid(23,12,2014,"12:00");
+        tider[3] = new Tid(23,12,2014,"09:00");
+
+        Tabell.innsettingssortering(tider);
+
+        for (Tid tid : tider) System.out.println(tid);
+
     }
 
 }

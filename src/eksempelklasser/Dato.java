@@ -12,6 +12,12 @@ public class Dato implements Comparable<Dato> {
         this.år = år;
     }
 
+    public Dato(int dag, Måned måned, int år) {
+        this.dag = dag;
+        mnd = måned.getMndnr();
+        this.år = år;
+    }
+
     public int compareTo(Dato d) {
         if(år < d.år) {return -1;}
         else if(år > d.år) {return 1;}
@@ -21,13 +27,24 @@ public class Dato implements Comparable<Dato> {
     }
 
     public boolean equals(Object o) {
+
+        /**d) Metoden equals() i datoklassen er kodet ved hjelp av compareTo(). Lag egen kode for equals(). Pass
+         *på at koden blir slik at x.equals(y) = y.equals(x) for alle datoer x og y. Pass også på at x.equals(y) = true
+         * hvis og bare hvis x.compareTo(y) = 0.**/
+
+
         if(o == this) {return true;}
         if(!(o instanceof Dato)) {return false;}
-        return compareTo((Dato) o) == 0;
+        Dato d = (Dato) o;
+        return år == d.år && mnd == d.mnd && dag == d.dag;
     }
 
+
+
     public String toString() {
-        return "" + dag + '/' + mnd + '-' + år;
+        StringBuilder sb = new StringBuilder();
+        sb.append(dag).append('.').append(" ").append(Måned.toString(mnd)).append(" ").append(år);
+        return sb.toString();
     }
 
     public int hashCode() {
