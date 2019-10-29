@@ -8,7 +8,7 @@ import java.util.Random;
 
 public class Tabell { //samleklasse for metodene fra program/målingAvTidsforbruk
 
-    private Tabell() {}; //privat standardkonstruktør - hindrer instansiering
+    private Tabell() {} //privat standardkonstruktør - hindrer instansiering
 
     //Metoden bytt(int[] values, int i, int j)
     public static void bytt(int[] a, int i, int j) {

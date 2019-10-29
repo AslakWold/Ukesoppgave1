@@ -9,7 +9,7 @@ public class MålingAvTidsforbruk {
 
         int n = 100_000, antall = 2_000; // tabellstørrelse og gjentagelser
         long tid = 0;
-        int a[] = randPerm(n);
+        int[] a = randPerm(n);
 
         tid = System.currentTimeMillis();   //leser av klokken
         for(int i = 0; i < antall; i++) {
