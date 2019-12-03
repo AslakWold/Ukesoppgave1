@@ -37,13 +37,16 @@ public class TabellListe<T> implements Liste<T> {
 
     @Override
     public void nullstill() {
-
+        if(a.length > 10) {
+            a = (T[]) new Object[10];
+        } else {
+            for(int i = 0; i < antall; i++) {
+                a[i] = null;
+            }
+        }
+        antall = 0;
     }
 
-    @Override
-    public Iterator<T> iterator() {
-        return null;
-    }
 
     public T hent(int indeks) {
         indeksKontroll(indeks, false);     //false: indeks = antall er ulovlig
@@ -59,27 +62,74 @@ public class TabellListe<T> implements Liste<T> {
 
     @Override
     public T oppdater(int indeks, T verdi) {
-        return null;
+        Objects.requireNonNull(verdi, "null er ulovlig!");
+        indeksKontroll(indeks, false); //false: indeks = antall er ulovlig
+
+        T gammelverdi = a[indeks];  //tar vare på den gamle verdien
+        a[indeks] = verdi;      //oppdaterer
+        return gammelverdi;     //returnerer gammelverdi
     }
 
     @Override
     public boolean fjern(T verdi) {
-        return false;
+         Objects.requireNonNull(verdi, "null er ulovlig");
+
+         int indeks = 0;
+
+         for(int i = 0; i < antall; i++) {
+            if(a[i].equals(verdi)) {
+                antall--;
+                System.arraycopy(a,i + 1,a, i, antall - i);
+
+                a[antall] = null;
+
+                return true;
+            }
+
+         }
+
+         return false;
     }
 
     @Override
     public T fjern(int indeks) {
-        return null;
+        indeksKontroll(indeks, false); //false: indeks = antall er ulovlig
+        T verdi = a[indeks];
+
+        antall--;   //sletter ved å flytte verdier mot venstre
+        System.arraycopy(a, indeks + 1,a, indeks, antall - indeks);
+        a[antall] = null;   //tilrettelegger for søppeltømming
+
+        return verdi;
     }
 
     @Override
-    public boolean leggInn(T verdi) {
-        return false;
+    public boolean leggInn(T verdi) {   //legger inn bakerst
+        Objects.requireNonNull(verdi, "null er ulovlig!");
+
+        if(antall == a.length) {    //en full tabell utvides med 50%
+            a = Arrays.copyOf(a, (3*antall)/2 + 1);
+        }
+
+        a[antall++] = verdi;        //setter inn ny verdi
+        return true;                //vellykket innlegging
     }
 
     @Override
     public void leggInn(int indeks, T verdi) {
+        Objects.requireNonNull(verdi,"null er ulovlig!");
+        indeksKontroll(indeks, true);   //true: indeks = antall er lovlig
 
+        //en full tabell utvides med 50%
+        if(antall == a.length) {
+            a = Arrays.copyOf(a, (3*antall)/2 + 1);
+        }
+
+        //rydder plass til den nye verdien
+        System.arraycopy(a,indeks,a,indeks+1, antall -indeks);
+
+        a[indeks++] = verdi;
+        antall++;
     }
 
     public boolean inneholder(T verdi) {
@@ -94,5 +144,47 @@ public class TabellListe<T> implements Liste<T> {
            sj.add(a[i].toString());
        }
        return sj.toString();
+    }
+
+    private class TabellListeIterator implements Iterator<T> {
+         private int denne = 0; //instansevariabel
+         private boolean fjernOK = false;
+         public boolean hasNext() { //sjekker om det er flere igjen  i listen
+             return denne < antall; //sjekker verdien til denne
+         }
+
+         public T next() {
+             if(!hasNext()) {
+                 throw new NoSuchElementException("Tom eller ingen verdi!");
+             }
+             T denneVerdi = a[denne];   //henter aktuell verdi
+             denne++;
+             fjernOK = true;
+
+             return denneVerdi;
+
+         }
+
+         public void remove() {
+             if(!fjernOK) {
+                 throw new IllegalStateException("Ulovlig tilstand!");
+             }
+             fjernOK = false;   //remove() kan ikke kalles på nytt
+
+             //verdien i denne-1 skal fjernes da ble returnert i siste kall
+             //på next(), verdiene fra og med denne flyttes derfor en plass mot venstre
+             antall--;      //en verdi blir fjernet
+             denne--;       //denne må flyttes til venstre
+
+             System.arraycopy(a, denne + 1, a, denne, antall-denne);
+             a[antall] = null;  //verdien som lå lengst til høyre nulles;
+         }
+
+
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+         return new TabellListeIterator();
     }
 }
